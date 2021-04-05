@@ -17,7 +17,7 @@
         <tbody>
             @foreach ($data as $item)
                 <tr>
-                    <td><a href="/attendance/{{ $item->building_id }}">{{ $item->building_name }}</a></td>
+                    <td><a href="/attendance/{{ $item->building_id }}"><b>{{ $item->building_name }}</b></a></td>
                     <td>{{ $item->Total }}</td>
                 </tr>
             @endforeach
