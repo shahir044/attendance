@@ -2,6 +2,7 @@ body {
   background: #fbfbfd;
 }
 
+
 .new_footer_area {
   background: #fbfbfd;
 }
@@ -159,7 +160,7 @@ h6 {
 .new_footer_top .footer_bg .footer_bg_one {
   background: url("https://1.bp.blogspot.com/-mvKUJFGEc-k/XclCOUSvCnI/AAAAAAAAUAE/jnBSf6Fe5_8tjjlKrunLBXwceSNvPcp3wCLcBGAsYHQ/s1600/volks.gif")
     no-repeat center center;
-  width: 330px;
+  width: 500px;
   height: 105px;
   background-size: 100%;
   position: absolute;
@@ -172,7 +173,7 @@ h6 {
 .new_footer_top .footer_bg .footer_bg_two {
   background: url("https://1.bp.blogspot.com/-hjgfxUW1o1g/Xck--XOdlxI/AAAAAAAAT_4/JWYFJl83usgRFMvRfoKkSDGd--_Sv04UQCLcBGAsYHQ/s1600/cyclist.gif")
     no-repeat center center;
-  width: 88px;
+  width: 500px;
   height: 100px;
   background-size: 100%;
   bottom: 0;
@@ -207,6 +208,7 @@ h6 {
   100% {
     left: 100%;
   }
+  
 }
 
 /*************footer End*****************/

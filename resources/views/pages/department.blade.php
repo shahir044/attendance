@@ -1,8 +1,9 @@
 @extends('layout.app')
 
-@section('context')
-<a href="/attendance" class="btn btn-primary" style="margin: 10px"> Go Back</a>
+@section('context')  
+{{-- <a href="javascript:window.history.back();"  class="btn btn-primary" style="margin: 10px"> Go Back</a> --}}
     <div class="content">
+        <h1>Date: {{$date}}</h1>
         <h1>{{$total[0]->building_name}}: {{$total[0]->Total}}</h1>
     </div>
     <table class="table table-striped table-hover customTable">
@@ -15,7 +16,7 @@
         <tbody>
           @foreach ($data as $item)
           <tr>
-            <td><a href="/attendance/{{$item->building_id}}/{{$item->shop_id}}">{{$item->department_name}}</a></td>
+            <td><a href="/attendance/{{$item->building_id}}/{{$item->shop_id}}/{{$date}}">{{$item->department}}</a></td>
             <td>{{$item->Total}}</td>
           </tr>
           @endforeach  

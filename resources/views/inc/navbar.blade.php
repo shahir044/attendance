@@ -19,13 +19,46 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+    
+        .first_col {
+            width: 45%;
+            height: auto;   
+        }
+        .custom_body{
+            width: 100% auto;
+        }
+ 
+        .arrow {
+             border: solid green;
+             border-width: 0 3px 3px 0;
+             display: inline-block;
+             padding: 3px;
+         }      
+         .left {
+             transform: rotate(135deg);
+             -webkit-transform: rotate(135deg);
+         }
+         .goback_btn{
+             background-color: white;
+             border-color: white;
+             padding-top: 15px;
+             padding-bottom: 0px;
+             margin: 0px;
+         }
+         /*#38c172*/ */
+     </style>
 </head>
 
-<body>
+<body class="custom_body">
     <div id="app">
+        <div class="navbar navbar-expand-md navbar-light bg-white shadow-sm " style="background: linear-gradient(45deg, #4fc672, #db3565); padding-left: 62px ">
+            <div class="first_col"><a href="#"><img src="{{ asset('images/Biman_Logo_English.png') }}" class="img-fluid" alt="logo"></a></div> 
+           <!-- <div class="second_col"><h2> Employee Attendance </h2></div> -->
+        </div> 
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm"
             style="background: linear-gradient(45deg, #47cf73, #e42c64);">
-
+            
             <div class="container">
                 {{-- <a class="navbar-brand" href="{{ url('/attendance') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -39,11 +72,8 @@
                     <li class="navbar-brand active">
                         <a class="nav-link" href="{{ url('/summary')}}">Summary <span class="sr-only">(current)</span></a>
                     </li>
-
-                    <form action="/search" method="get" class="form-inline my-2 my-lg-0">
-                        <input type="search" required name="search" class= "form-control mr-sm-2"  placeholder="Search Name" aria-label="Search">
-                        <button class="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
-                    </form>
+                    <a href="/search"  class="btn btn-outline-dark" style="margin: 10px"><b>Search<b></a>
+                    
                 </ul>   
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse"

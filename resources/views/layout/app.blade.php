@@ -31,7 +31,7 @@
             font-family: 'Nunito', sans-serif;
             font-weight: 200;
             height: 100vh;
-            margin: 10px;
+            /* margin: 10px; */
            
         }
 
@@ -172,7 +172,6 @@
     @include('inc.navbar')
     <div class=container>
         @yield('context')
-
     </div>
 
     <script>
@@ -183,10 +182,6 @@
     </script>
 
     @include('inc.footer') 
-
-
-
-    
 
 </body>
 

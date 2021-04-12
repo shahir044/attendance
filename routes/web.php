@@ -20,8 +20,8 @@ Route::get('/',function() {
 
 Route::get('/file','fileController@uploadFile');
 Route::post('/file','fileController@fileUploaded')->name('file.Uploaded');
-Route::get('/attendance/{id}', 'fileController@show');
-Route::get('/attendance/{id}/{d_id}', 'fileController@showDepartmentDetails');
+Route::get('/attendance/{id}/{date}', 'fileController@show');
+Route::get('/attendance/{id}/{d_id}/{date}', 'fileController@showDepartmentDetails');
 Route::get('/search', 'fileController@search');
 Route::get('/summary', 'fileController@summary');
 
@@ -31,6 +31,12 @@ Route::get('/test','fileController@test');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::get('/month', 'fileController@month');
+Route::get('/home', function(){
+    return view('pages.home');
+});
 
 
 
