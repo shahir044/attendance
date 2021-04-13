@@ -268,6 +268,7 @@ class fileController extends Controller
             ->where('name', 'like', '%' . $search . '%')
             /* ->orWhere('designation', 'like', '%'.$search.'%') */
             /* ->orderBy('attendances.employee_id','DESC') */
+            ->orderBy('employees.employee_id', 'DESC')
             ->distinct()
             ->get();
         } 
