@@ -63,7 +63,16 @@ class fileController extends Controller
                 $demodate = $year . $month . $day;
                 $date = DateTime::createFromFormat('Ymd', $demodate)->format('Y-m-d');
 
-                $inTime = (int)substr($line, 9, 6);
+
+                $hour = substr($line, 9, 2);
+                $minute = substr($line, 11, 2);
+                $second = substr($line, 13, 2);
+                $inTime = $hour. $minute. $second;
+                //$Time=Carbon::createFromTime($hour, $minute, $second, $inTime);
+                $time= Carbon::createFromFormat('His',$inTime)->format('h:i:s');
+
+                //return $time;
+
                 $employeeId = (int)substr($line, 19, 5);
 
                 $tempValue = $uniqueValue[$employeeId][$date] ?? null;
@@ -83,6 +92,7 @@ class fileController extends Controller
 
                     $data = DB::table('attendances')->insert([
                         'date' => $date,
+                        'in_time' => $time,
                         'employee_id' => $employeeId,
                         'building_id' => $building_id,
                         'shop_id' => $shop_id,
@@ -202,7 +212,7 @@ class fileController extends Controller
     {
         $date = $selectedDate;
         $data = DB::table('attendances')
-            ->select('attendances.employee_id', 'employees.name', 'employees.designation', 'employees.department')
+            ->select('attendances.employee_id', 'employees.name', 'employees.designation', 'employees.department','attendances.in_time')
             ->join('employees', 'attendances.employee_id', '=', 'employees.employee_id')
             /* ->join('departments', 'attendances.shop_id', '=', 'departments.shop_id') */
             ->where('attendances.date', '=', $date)
@@ -240,7 +250,7 @@ class fileController extends Controller
 
 
         $datas = DB::table('attendances')
-            ->select('attendances.employee_id', 'name', 'designation', 'department', 'building_name')
+            ->select('attendances.employee_id', 'name', 'designation', 'department', 'building_name','attendances.in_time')
             ->join('employees', 'attendances.employee_id', '=', 'employees.employee_id')
             ->join('buildings', 'attendances.building_id', '=', 'buildings.building_id')
             ->where('date', '=', $date)
@@ -338,5 +348,23 @@ class fileController extends Controller
     {
 
         return view('pages.month');
+    }
+    
+    public function individual()
+    {
+
+        $myDate = DB::table('attendances')->value('date');
+        
+        $year = Carbon::createFromFormat('Y-d-m', $myDate)->format('Y');
+        $month = Carbon::createFromFormat('Y-d-m', $myDate)->format('m');
+        //return $month;
+        $datas = DB::table('attendances')
+            ->select('employee_id',DB::raw('YEAR(date) as year'), DB::raw('count(*) as Total'))
+            
+            ->groupBy('employee_id','year')->get();
+        
+            return view('pages.individual', compact('datas'));
+        
+        
     }
 }

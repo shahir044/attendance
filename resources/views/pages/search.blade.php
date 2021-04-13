@@ -25,6 +25,7 @@
                 <th scope="col">Department Name</th>
                 <th scope="col">Location</th>
                 <th scope="col">ID</th>
+                <th scope="col">Location</th>
                 <th scope="col">Status</th>
             </tr>
         </thead>

@@ -66,11 +66,11 @@
 
                 <ul class="navbar-nav mr-auto">
                     <li class="navbar-brand active">
-                      <a class="nav-link" href="/attendance">Home <span class="sr-only">(current)</span></a>
+                      <a class="nav-link" href="/attendance"><b>Home<b><span class="sr-only">(current)</span></a>
                     </li>
 
                     <li class="navbar-brand active">
-                        <a class="nav-link" href="{{ url('/summary')}}">Summary <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="{{ url('/summary')}}"><b>Summary<b><span class="sr-only">(current)</span></a>
                     </li>
                     <a href="/search"  class="btn btn-outline-dark" style="margin: 10px"><b>Search<b></a>
                     

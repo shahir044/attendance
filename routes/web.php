@@ -38,5 +38,7 @@ Route::get('/home', function(){
     return view('pages.home');
 });
 
+Route::get('/individual','fileController@individual');
+
 
 

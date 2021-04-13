@@ -21,6 +21,7 @@
                 <th scope="col">Employee Name</th>
                 <th scope="col">Designation</th>
                 <th scope="col">Employee ID</th>
+                <th scope="col">In Time</th>
                 <th scope="col">Status</th>
             </tr>
         </thead>
@@ -30,6 +31,7 @@
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->designation }}</td>
                     <td>{{ $item->employee_id }}</td>
+                    <td>{{ $item->in_time }}</td>
                     <td style="background-color:#50c572">Available</td>
                 </tr>
             @endforeach
