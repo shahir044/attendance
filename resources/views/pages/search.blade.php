@@ -15,9 +15,7 @@
         <button class="btn btn-dark my-2 mr-sm-5" type="submit">Search</button>
     </form>
 
-    
-    
-    <table class="table table-striped table-hover customTable" id="AttendanceTable">
+    <table class="table table-striped table-hover customTable" id="AttendancePTable">
         <thead  style="background: linear-gradient(45deg, #47cf73, #e42c64);">
             <tr>
                 <th scope="col">Employee Name</th>
@@ -41,6 +39,23 @@
                     <td style="background-color:#50c572">Available</td>
                 </tr>
             @endforeach
+        </tbody>
+    </table>
+    
+    
+    <table class="table table-striped table-hover customTable" id="AttendanceATable">
+        <thead  style="background: linear-gradient(45deg, #47cf73, #e42c64);">
+            <tr>
+                <th scope="col">Employee Name</th>
+                <th scope="col">Designation</th>
+                <th scope="col">Department Name</th>
+                <th scope="col">Location</th>
+                <th scope="col">ID</th>
+                <th scope="col">Location</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
             @foreach ($absent as $item)
                 <tr>
                     <td>{{ $item->name }}</td>
@@ -84,11 +99,25 @@
 
     <script>
         function searchByID() {
-          var input, filter, table, tr, td, i, txtValue;
+          var input, filter, pr_table,ab_table, tr, td, i, txtValue;
           input = document.getElementById("searchInput");
           filter = input.value.toUpperCase();
-          table = document.getElementById("AttendanceTable");
-          tr = table.getElementsByTagName("tr");
+          pr_table = document.getElementById("AttendancePTable");
+          ab_table = document.getElementById("AttendanceATable");
+          tr = pr_table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }       
+          }
+          //for absence
+          tr = ab_table.getElementsByTagName("tr");
           for (i = 0; i < tr.length; i++) {
             td = tr[i].getElementsByTagName("td")[0];
             if (td) {

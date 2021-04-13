@@ -5,9 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name', 'Attendance') }}</title>
+    <title>{{ config('app.name', 'Biman Attendance') }}</title>
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
 
+    <!-- favicon for website -->
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon_img.png') }}">
+    
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">

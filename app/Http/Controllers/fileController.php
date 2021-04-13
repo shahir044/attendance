@@ -249,19 +249,34 @@ class fileController extends Controller
         }
 
 
-        $datas = DB::table('attendances')
+/*         $datas = DB::table('attendances')
             ->select('attendances.employee_id', 'name', 'designation', 'department', 'building_name','attendances.in_time')
             ->join('employees', 'attendances.employee_id', '=', 'employees.employee_id')
             ->join('buildings', 'attendances.building_id', '=', 'buildings.building_id')
             ->where('date', '=', $date)
             ->where('name', 'like', '%' . $search . '%')
-            /* ->orWhere('designation', 'like', '%'.$search.'%') */
+            ->where('designation', 'like', '%'.$search.'%')
             ->orderBy('attendances.employee_id', 'DESC')
 
             ->distinct()
             ->get();
-        //return $search;
+        //return $search;  */
+        $datas = DB::table('attendances')
+        ->select('attendances.employee_id', 'name', 'designation', 'department', 'building_name','attendances.in_time')
+        ->join('employees', 'attendances.employee_id', '=', 'employees.employee_id')
+        ->join('buildings', 'attendances.building_id', '=', 'buildings.building_id')
+        ->where('date', '=', $date)
+        ->where(function($q) use ($search) {
+            $q->where('name', 'like', '%' . $search . '%')
+              ->orWhere('designation', 'like', '%'.$search.'%');
+        })
+        ->orderBy('attendances.employee_id', 'DESC')
+        ->distinct()
+        ->get();
+    //return $search; 
 
+
+    
         if ($datas->isEmpty()) { 
         $absent = DB::table('employees')
             ->select('employee_id', 'name', 'designation', 'department')

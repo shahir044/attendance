@@ -8,8 +8,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'BG Attendance') }}</title>
 
+    <!-- favicon for website -->
+  <!--   <link rel="icon" type="image/png" href="{{ asset('images/favicon_img.png') }}"> -->
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
@@ -61,7 +63,7 @@
             
             <div class="container">
                 {{-- <a class="navbar-brand" href="{{ url('/attendance') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ config('app.name', 'BG Attendance') }}
                 </a> --}}
 
                 <ul class="navbar-nav mr-auto">
