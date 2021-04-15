@@ -24,6 +24,7 @@ Route::get('/attendance/{id}/{date}', 'fileController@show');
 Route::get('/attendance/{id}/{d_id}/{date}', 'fileController@showDepartmentDetails');
 Route::get('/search', 'fileController@search');
 Route::get('/summary', 'fileController@summary');
+Route::get('/sumtwo', 'fileController@sumTwo');
 
 Route::get('/attendance', 'fileController@attendance');
 

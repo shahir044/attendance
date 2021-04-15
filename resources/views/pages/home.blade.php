@@ -14,12 +14,13 @@
           <h2 class="logo">Biman Bangladesh Airlines</h2>
           <div class="toggle"></div>
         </header>
-        <video src="videos/production.mp4" muted loop autoplay></video>
+        <video src="videos/team.mp4" muted loop autoplay></video>
         <div class="overlay"></div>
         <div class="text">
-          <h2>Never Stop To</h2> 
-          <h3>Exploring The World</h3>
-          <p>Welcome aboard your home in the sky. My heartiest thanks to you for choosing Biman Bangladesh Airlines. We strive to earn your loyalty every time you fly Biman by offering safe and reliable service to the destinations of your choice.</p>
+          <h2>Alone</h2> 
+          <h3>we can do so little.<br>Together we can do so much.</h3>
+          
+          <p>When you have confidence, you can have a lot of fun.<br>And when you have fun, you can do amazing things.</p>
           <a href="https://www.biman-airlines.com/">Explore</a>
         </div>
         <ul class="social">

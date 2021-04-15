@@ -137,9 +137,41 @@ class fileController extends Controller
         $datas = DB::table('attendances')
             ->select('date', 'buildings.building_name', DB::raw('count(*) as Total'))
             ->join('buildings', 'buildings.building_id', '=', 'attendances.building_id')
+            /* ->where('buildings.building_name','=','Balaka') */
             ->groupBy('building_name', 'date')->get();
         //return $datas;
         return view('pages.summary', compact('datas'));
+    }
+
+    public function sumTwo()
+    {
+
+     
+        $datas = DB::table('attendances')
+            ->select('date', 'buildings.building_name', DB::raw('count(employee_id) as Total'))
+            ->leftJoin('buildings', 'attendances.building_id', '=', 'buildings.building_id')
+            /* ->where('buildings.building_name','=','Balaka') */
+            
+            ->orderBy('date')
+            ->orderBy('building_name')
+            ->groupBy('building_name', 'date')->get();
+        //return $datas;
+
+        $totalDate = DB::table('attendances')
+        ->select('date')
+            ->distinct('date')
+            ->get();
+
+        $buildings = DB::table('attendances')
+        ->select('building_name')
+        ->join('buildings', 'attendances.building_id', '=', 'buildings.building_id')
+        ->distinct('building_name')
+        ->orderBy('building_name')
+        ->get();
+            
+            
+        //return $datas;
+        return view('pages.sum2', compact('datas','totalDate','buildings'));
     }
 
 
@@ -262,16 +294,19 @@ class fileController extends Controller
             ->get();
         //return $search;
 
-        if ($datas->isEmpty()) { 
+        /* if ($datas->isEmpty()) { */ 
         $absent = DB::table('employees')
             ->select('employee_id', 'name', 'designation', 'department')
+            ->whereNotIn('employees.employee_id',
+            DB::table('attendances')
+            ->select('attendances.employee_id'))
             ->where('name', 'like', '%' . $search . '%')
             /* ->orWhere('designation', 'like', '%'.$search.'%') */
             /* ->orderBy('attendances.employee_id','DESC') */
-            ->orderBy('employees.employee_id', 'DESC')
-            ->distinct()
+            /* ->orderBy('employees.employee_id', 'DESC')
+            ->distinct() */
             ->get();
-        } 
+        /* }  */
 
         return view('pages.search', compact('datas', 'absent', 'date'));
     }

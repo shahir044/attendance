@@ -72,7 +72,7 @@
                         <a class="nav-link" href="{{ url('/month')}}"><b>Monthly Record<b><span class="sr-only">(current)</span></a>
                     </li>
                     <li class="navbar-brand active">
-                        <a class="nav-link" href="{{ url('/summary')}}"><b>Summary<b><span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="{{ url('/sumtwo')}}"><b>Summary<b><span class="sr-only">(current)</span></a>
                     </li>
                     
                     <a href="/search"  class="btn btn-outline-dark" style="margin: 10px"><b>Search<b></a>

@@ -39,7 +39,7 @@
 
     </table>
 
-    <table class="table table-striped table-hover customTable" id="AttendanceTableAbsent">
+    <table class="table table-striped table-hover customTable" id="AttendanceAbsentTable">
         {{-- <h3 style="text-align:center;"><b>Absent Table<b></h3> --}}
         <thead style="background: linear-gradient(45deg, #47cf73, #e42c64);">
             <tr>
@@ -67,6 +67,20 @@
             input = document.getElementById("searchInput");
             filter = input.value.toUpperCase();
             table = document.getElementById("AttendanceTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+
+            table = document.getElementById("AttendanceAbsentTable");
             tr = table.getElementsByTagName("tr");
             for (i = 0; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td")[0];

@@ -1,6 +1,7 @@
 @extends('layout.app')
 
 @section('context')
+    
 
     <table class="table table-striped table-hover customTable">
         <thead style="background: linear-gradient(45deg, #47cf73, #e42c64);">
