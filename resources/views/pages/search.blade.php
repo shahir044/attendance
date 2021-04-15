@@ -41,36 +41,8 @@
             @endforeach
         </tbody>
     </table>
-    
-    
-    <table class="table table-striped table-hover customTable" id="AttendanceATable">
-        <thead  style="background: linear-gradient(45deg, #47cf73, #e42c64);">
-            <tr>
-                <th scope="col">Employee Name</th>
-                <th scope="col">Designation</th>
-                <th scope="col">Department Name</th>
-                <th scope="col">Location</th>
-                <th scope="col">ID</th>
-                <th scope="col">Location</th>
-                <th scope="col">Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($absent as $item)
-                <tr>
-                    <td>{{ $item->name }}</td>
-                    <td>{{ $item->designation }}</td>
-                    <td>{{ $item->department }}</td>
-                    <td>Not Found</td>
-                    <td>{{ $item->employee_id }}</td>
-                    <td>Unavailable</td>
-                    <td style="background-color:#c54c67">Unavailable from 06:30am to 10:30am</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
 
-    <table class="table table-striped table-hover customTable" id="AttendanceTable">
+    <table class="table table-striped table-hover customTable" id="AttendanceATable">
         <thead  style="background: linear-gradient(45deg, #47cf73, #e42c64);">
             <tr>
                 <th scope="col">Employee Name</th>
@@ -99,36 +71,47 @@
 
     <script>
         function searchByID() {
-          var input, filter, pr_table,ab_table, tr, td, i, txtValue;
-          input = document.getElementById("searchInput");
-          filter = input.value.toUpperCase();
+          var input_name,filter_name, pr_table,ab_table, tr_name, td_name, td_designation,td_id, i, txtValue_name,txtValue_designation,txtValue_id;
+          input_name = document.getElementById("searchInput");
+          filter_name = input_name.value.toUpperCase();
           pr_table = document.getElementById("AttendancePTable");
-          ab_table = document.getElementById("AttendanceATable");
-          tr = pr_table.getElementsByTagName("tr");
-          for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-              txtValue = td.textContent || td.innerText;
-              if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
+          tr_name = pr_table.getElementsByTagName("tr");
+          for (i = 0; i < tr_name.length; i++) {
+            //for name, designation and id wise search in present table
+            td_name = tr_name[i].getElementsByTagName("td")[0];
+            td_designation = tr_name[i].getElementsByTagName("td")[1];
+            td_id = tr_name[i].getElementsByTagName("td")[4];
+            if (td_name || td_designation || td_id) {
+                txtValue_name = td_name.textContent || td_name.innerText;
+                txtValue_designation = td_designation.textContent || td_designation.innerText;
+                txtValue_id = td_id.textContent || td_id.innerText;
+              if ((txtValue_name.toUpperCase().indexOf(filter_name) > -1) || (txtValue_designation.toUpperCase().indexOf(filter_name) > -1) || (txtValue_id.toUpperCase().indexOf(filter_name) > -1)) {
+                tr_name[i].style.display = "";
               } else {
-                tr[i].style.display = "none";
+                tr_name[i].style.display = "none";
               }
-            }       
-          }
+            }  
+          }     
           //for absence
-          tr = ab_table.getElementsByTagName("tr");
-          for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-              txtValue = td.textContent || td.innerText;
-              if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
+          ab_table = document.getElementById("AttendanceATable");
+          tr_name = ab_table.getElementsByTagName("tr");
+          for (i = 0; i < tr_name.length; i++) {
+            //for name, designation and id wise search in present table
+            td_name = tr_name[i].getElementsByTagName("td")[0];
+            td_designation = tr_name[i].getElementsByTagName("td")[1];
+            td_id = tr_name[i].getElementsByTagName("td")[4];
+            if (td_name || td_designation || td_id) {
+                txtValue_name = td_name.textContent || td_name.innerText;
+                txtValue_designation = td_designation.textContent || td_designation.innerText;
+                txtValue_id = td_id.textContent || td_id.innerText;
+              if ((txtValue_name.toUpperCase().indexOf(filter_name) > -1) || (txtValue_designation.toUpperCase().indexOf(filter_name) > -1) || (txtValue_id.toUpperCase().indexOf(filter_name) > -1)) {
+                tr_name[i].style.display = "";
               } else {
-                tr[i].style.display = "none";
+                tr_name[i].style.display = "none";
               }
-            }       
-          }
+            }  
+          }      
+
         }
     </script>
 @endsection

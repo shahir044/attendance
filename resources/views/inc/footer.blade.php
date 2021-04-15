@@ -1,6 +1,6 @@
 
 
-<footer class="new_footer_area bg_color">
+<!-- <footer class="new_footer_area bg_color">
     
     <div class="footer_bottom">
         
@@ -20,4 +20,11 @@
         </div>
         <div ><a href="#"><img src="{{ asset('images/biman.png') }}" class="img-fluid" alt="logo"></a></div> 
     </div>
+</footer> -->
+
+<footer class="float-right" style=" width: 100%">
+<!--       <p class="float-right" style="padding-top: -20%; margin: bottom 0%; margin-right: 5%">
+        &#169; IT-Division, Biman Bangladesh Airlines
+      </p> -->
+      <img src="{{ asset('images/copywright.png') }}" style=" width: 100%" />
 </footer>
