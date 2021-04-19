@@ -31,7 +31,7 @@ Route::get('/attendance', 'fileController@attendance');
 Route::get('/test','fileController@test');
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+
 
 
 Route::get('/month', 'fileController@month');
@@ -49,6 +49,4 @@ Route::get('/individual','fileController@individual');
 
 
 
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
