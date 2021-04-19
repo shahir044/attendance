@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Attendance;
 use App\Department;
 use Carbon\Carbon;
-
+use Cron\MonthField;
 
 class fileController extends Controller
 {
@@ -43,7 +43,7 @@ class fileController extends Controller
 
             $file = File::get($file->getRealPath());
 
-            DB::table('attendances')->delete();
+            //DB::table('attendances')->delete();
 
             $uniqueValue = array();
 
@@ -67,9 +67,9 @@ class fileController extends Controller
                 $hour = substr($line, 9, 2);
                 $minute = substr($line, 11, 2);
                 $second = substr($line, 13, 2);
-                $inTime = $hour. $minute. $second;
+                $inTime = $hour . $minute . $second;
                 //$Time=Carbon::createFromTime($hour, $minute, $second, $inTime);
-                $time= Carbon::createFromFormat('His',$inTime)->format('h:i:s');
+                $time = Carbon::createFromFormat('His', $inTime)->format('h:i:s');
 
                 //return $time;
 
@@ -90,7 +90,7 @@ class fileController extends Controller
                         ->where('employee_id', '=', $employeeId)
                         ->value('shop_id');
 
-                    $data = DB::table('attendances')->insert([
+                    $data = DB::table('attendances')->insertorIgnore([
                         'date' => $date,
                         'in_time' => $time,
                         'employee_id' => $employeeId,
@@ -113,7 +113,7 @@ class fileController extends Controller
                     //echo "<br>";
                 }
             }
-        }else {
+        } else {
             return redirect('/')->with('failed', "TRY AGAIN");
         }
 
@@ -143,76 +143,43 @@ class fileController extends Controller
         return view('pages.summary', compact('datas'));
     }
 
-    public function sumTwo()
+    public function sumTwo(Request $request)
     {
 
-     
+        $year_month = $request->get('selectedMonth');
+        $year = Carbon::parse($year_month)->year;
+        $month =Carbon::parse($year_month)->month;
+
         $datas = DB::table('attendances')
-            ->select('date', 'buildings.building_name', DB::raw('count(employee_id) as Total'))
-            ->leftJoin('buildings', 'attendances.building_id', '=', 'buildings.building_id')
+            ->select('date', 'buildings.building_name', DB::raw('count(*) as Total'), DB::raw('DAY(date) as dayDB'),DB::raw('DAYNAME(date) as dayName'))
+            ->join('buildings', 'attendances.building_id', '=', 'buildings.building_id')
             /* ->where('buildings.building_name','=','Balaka') */
-            
+            ->whereMonth('date', '=', $month)
+            ->groupBy('date','attendances.building_id','building_name')
             ->orderBy('date')
-            ->orderBy('building_name')
-            ->groupBy('building_name', 'date')->get();
+            ->get();
         //return $datas;
 
         $totalDate = DB::table('attendances')
-        ->select('date')
+            ->select('date')
             ->distinct('date')
             ->get();
 
         $buildings = DB::table('attendances')
-        ->select('building_name')
-        ->join('buildings', 'attendances.building_id', '=', 'buildings.building_id')
-        ->distinct('building_name')
-        ->orderBy('building_name')
-        ->get();
-            
-            
+            ->select('building_name')
+            ->join('buildings', 'attendances.building_id', '=', 'buildings.building_id')
+            ->groupBy('buildings.building_id','building_name',DB::raw( 'MONTH(date)' ))
+            ->orderBy('buildings.building_id')
+            ->distinct('building_name')
+            ->get();
+        
+            //return $buildings;
+
         //return $datas;
-        return view('pages.sum2', compact('datas','totalDate','buildings'));
+        $date=date('m-Y', strtotime($year_month));
+        return view('pages.sum2', compact('datas', 'totalDate', 'buildings','date'));
     }
 
-
-
-    public function test()
-    {
-
-        $data = array(
-            'title' => 'Alhamdulillah',
-            'services' => ['Hello', 'No', 'YES']
-        );
-        return view('pages.test')->with($data);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id, $date)
     {
         //$date = Carbon::now()->format('Y-m-d');
@@ -236,7 +203,7 @@ class fileController extends Controller
             ->groupBy('building_name')
             ->get();
         //return $total;
-
+        /* $date=date('d-m-Y', strtotime($date)); */
         return view('pages.department', compact('data', 'total', 'date'));
     }
 
@@ -244,7 +211,7 @@ class fileController extends Controller
     {
         $date = $selectedDate;
         $data = DB::table('attendances')
-            ->select('attendances.employee_id', 'employees.name', 'employees.designation', 'employees.department','attendances.in_time')
+            ->select('attendances.employee_id', 'employees.name', 'employees.designation', 'employees.department', 'attendances.in_time')
             ->join('employees', 'attendances.employee_id', '=', 'employees.employee_id')
             /* ->join('departments', 'attendances.shop_id', '=', 'departments.shop_id') */
             ->where('attendances.date', '=', $date)
@@ -259,12 +226,12 @@ class fileController extends Controller
             ->where('employees.shop_id', '=', $d_id)
             ->whereNotIn('employees.employee_id', DB::table('attendances')
                 ->select('attendances.employee_id')
+                ->where('attendances.date', '=', $date)
                 ->where('attendances.shop_id', '=', $d_id)
-                ->where('attendances.building_id', '=', $id)
-                ->where('attendances.date', '=', $date))
+                ->where('attendances.building_id', '=', $id))
             ->get();
         //return $absent;
-
+        $date=date('d-m-Y', strtotime($date));
         return view('pages.employee', compact('data', 'id', 'date', 'absent'));
     }
 
@@ -282,7 +249,7 @@ class fileController extends Controller
 
 
         $datas = DB::table('attendances')
-            ->select('attendances.employee_id', 'name', 'designation', 'department', 'building_name','attendances.in_time')
+            ->select('attendances.employee_id', 'name', 'designation', 'department', 'building_name', 'attendances.in_time')
             ->join('employees', 'attendances.employee_id', '=', 'employees.employee_id')
             ->join('buildings', 'attendances.building_id', '=', 'buildings.building_id')
             ->where('date', '=', $date)
@@ -294,12 +261,14 @@ class fileController extends Controller
             ->get();
         //return $search;
 
-        /* if ($datas->isEmpty()) { */ 
+        /* if ($datas->isEmpty()) { */
         $absent = DB::table('employees')
             ->select('employee_id', 'name', 'designation', 'department')
-            ->whereNotIn('employees.employee_id',
-            DB::table('attendances')
-            ->select('attendances.employee_id'))
+            ->whereNotIn(
+                'employees.employee_id',
+                DB::table('attendances')
+                    ->select('attendances.employee_id')
+            )
             ->where('name', 'like', '%' . $search . '%')
             /* ->orWhere('designation', 'like', '%'.$search.'%') */
             /* ->orderBy('attendances.employee_id','DESC') */
@@ -307,42 +276,8 @@ class fileController extends Controller
             ->distinct() */
             ->get();
         /* }  */
-
+        $date=date('d-m-Y', strtotime($date));
         return view('pages.search', compact('datas', 'absent', 'date'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 
     public function attendance(Request $request)
@@ -371,9 +306,81 @@ class fileController extends Controller
             ->select(DB::raw('count(*) as Total'))
             ->where('date', '=', $date)
             ->get();
-
+        /* $date=date('d-m-Y', strtotime($date)); */
         return view('pages.todaysAttendance', compact('data', 'total', 'date'));
     }
+
+
+    public function test()
+    {
+
+        $data = array(
+            'title' => 'Alhamdulillah',
+            'services' => ['Hello', 'No', 'YES']
+        );
+        return view('pages.test')->with($data);
+    }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+
+    public function individual()
+    {
+
+        $myDate = DB::table('attendances')->value('date');
+
+        $year = Carbon::createFromFormat('Y-d-m', $myDate)->format('Y');
+        $month = Carbon::createFromFormat('Y-d-m', $myDate)->format('m');
+        //return $month;
+        $datas = DB::table('attendances')
+            ->select('employee_id', DB::raw('YEAR(date) as year'), DB::raw('count(*) as Total'))
+
+            ->groupBy('employee_id', 'year')->get();
+
+        return view('pages.individual', compact('datas'));
+    }
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
 
     public function someRouteMethod(Request $request)
     {
@@ -385,22 +392,22 @@ class fileController extends Controller
 
         return view('pages.month');
     }
-    
-    public function individual()
-    {
 
-        $myDate = DB::table('attendances')->value('date');
-        
-        $year = Carbon::createFromFormat('Y-d-m', $myDate)->format('Y');
-        $month = Carbon::createFromFormat('Y-d-m', $myDate)->format('m');
-        //return $month;
-        $datas = DB::table('attendances')
-            ->select('employee_id',DB::raw('YEAR(date) as year'), DB::raw('count(*) as Total'))
-            
-            ->groupBy('employee_id','year')->get();
-        
-            return view('pages.individual', compact('datas'));
-        
-        
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
     }
 }
+
+
+/**
+ * Show the form for creating a new resource.
+ *
+ * @return \Illuminate\Http\Response
+ */

@@ -8,8 +8,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'BG Attendance') }}</title>
 
+    <!-- favicon for website -->
+  <!--   <link rel="icon" type="image/png" href="{{ asset('images/favicon_img.png') }}"> -->
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
@@ -23,7 +25,6 @@
     
         .first_col {
             width: 45%;
-            height: auto;   
         }
         .custom_body{
             width: 100% auto;
@@ -52,30 +53,22 @@
 
 <body class="custom_body">
     <div id="app">
-        <div class="navbar navbar-expand-md navbar-light bg-white shadow-sm " style="background: linear-gradient(45deg, #4fc672, #db3565); padding-left: 62px ">
-            <div class="first_col"><a href="#"><img src="{{ asset('images/Biman_Logo_English.png') }}" class="img-fluid" alt="logo"></a></div> 
-           <!-- <div class="second_col"><h2> Employee Attendance </h2></div> -->
-        </div> 
+        
+         
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm"
             style="background: linear-gradient(45deg, #47cf73, #e42c64);">
-            
+            <div class="first_col"><a href="#"><img src="{{ asset('images/Biman_Logo_English.png') }}" class="img-fluid" alt="logo"></a></div> 
+          
             <div class="container">
                 {{-- <a class="navbar-brand" href="{{ url('/attendance') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ config('app.name', 'BG Attendance') }}
                 </a> --}}
 
                 <ul class="navbar-nav mr-auto">
-                    <li class="navbar-brand active">
-                      <a class="nav-link" href="/attendance"><b>Home<b><span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="navbar-brand active">
-                        <a class="nav-link" href="{{ url('/month')}}"><b>Monthly Record<b><span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="navbar-brand active">
-                        <a class="nav-link" href="{{ url('/sumtwo')}}"><b>Summary<b><span class="sr-only">(current)</span></a>
-                    </li>
                     
-                    <a href="/search"  class="btn btn-outline-dark" style="margin: 10px"><b>Search<b></a>
+                    
+                    
+                   {{--  <a href="/search"  class="btn btn-outline-dark" style="margin: 10px"><b>Search<b></a> --}}
                     
                 </ul>   
 
@@ -97,8 +90,20 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
+                        <li class="navbar-brand active">
+                            <a style="color: aliceblue" class="nav-link" href="/attendance">Home<span class="sr-only">(current)</span></a>
+                          </li>
+                          <li class="navbar-brand active">
+                              <a style="color: aliceblue" class="nav-link" href="{{ url('/month')}}">Monthly Record<span class="sr-only">(current)</span></a>
+                          </li>
+                          <li class="navbar-brand active">
+                              <a style="color: aliceblue" class="nav-link" href="{{ url('/sumtwo')}}">Summary<span class="sr-only">(current)</span></a>
+                          </li>
+                          <li class="navbar-brand active">
+                              <a style="color: aliceblue" class="nav-link" href="{{ url('/search')}}">Search<span class="sr-only">(current)</span></a>
+                          </li>
                         
-                        <!-- Authentication Links -->
+{{--                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
                                 <a style="color: aliceblue" class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -128,7 +133,7 @@
 
                                 </div>
                             </li>
-                        @endguest
+                        @endguest --}}
                     </ul>
                 </div>
             </div>
