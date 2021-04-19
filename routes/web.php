@@ -35,11 +35,20 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::get('/month', 'fileController@month');
+
 Route::get('/home', function(){
     return view('pages.home');
+});
+
+Route::get('/about', function(){
+    return view('pages.about');
 });
 
 Route::get('/individual','fileController@individual');
 
 
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
