@@ -11,9 +11,6 @@
 @section('context')
 
 <style>
-
-
-
 #searchInput {
   background-image: url({{url('images/search2.png')}});
   background-size: 10%;
@@ -30,18 +27,51 @@
 <div class="content" style="width: 100%">
 <div >
 <?php
-  $month = date('m');
-  $month_name = date('F', mktime(0,0,0,$month,10));
-  $year = date('Y');
+if(isset($_GET['month']) && isset($_GET['year'])){
+  $month = $_GET['month'];
+  $monthName = date('F', mktime(0, 0, 0, $month, 10));
+  $year = $_GET['year'];
   
-  echo '<h2>Monthly Attendance List: '.$month_name.'-'. $year . '</h2>';
+  $day_in = $year.'-'.$month.'-01';
+  $day_out = date ("Y-m-t",strtotime($day_in));
+  $today = date('Y-m-d'); 
+}
+else{
+  $month = date('m');
+  $monthName = date('F', mktime(0, 0, 0, $month, 10)); 
+  $year = date('Y');
 
   $today = date('Y-m-d');    //today;
   $day_in = date('Y-m-01');   //first date of current month
   $day_out = date("Y-m-t", strtotime($today));    //last date of current month
-
+}
+echo '<h2>Monthly Attendance List: '. $monthName . '/' . $year . '</h2>';
 ?>
-  </div>
+</div>
+
+<div>
+<form>
+  <label for="month">Month:</label>
+  <select id="month" name="month">
+    <option value="01">January</option>
+    <option value="02">February</option>
+    <option value="03">March</option>
+    <option value="04">April</option>
+    <option value="05">May</option>
+    <option value="06">June</option>
+    <option value="07">July</option>
+    <option value="08">August</option>
+    <option value="09">September</option>
+    <option value="10">October</option>
+    <option value="11">November</option>
+    <option value="12">December</option>
+  </select>
+  <label for="year">Year:</label>
+  <input type="number" id="year" name="year" min="2021" placeholder="Select Year" value="2021">
+  <input type="submit">
+</form>
+</div>
+
 <div>
 <input type="text" id="searchInput" onkeyup="searchByID()" placeholder="Search Employee ID..." title="Type Employee ID">
 </div>
@@ -55,27 +85,28 @@
     <th>Department</th> -->
     <th>ID</th>
     <?php
-    // $count = 0;
-    // while($count < $day){
-    //     $count ++;
-    //     echo '<th>'. $count . '</th>';
-    // }
     $new_day = $day_in;
     while($new_day <= $day_out){
-        $day_print = date("d", strtotime($new_day));
-        echo '<th>'. $day_print . '</th>';
-        $start_day = strtotime("1 day", strtotime($new_day));
-        $new_day = date("Y-m-d", $start_day);
-
-        $weekDay = date('w', strtotime($new_day));
-      //  echo " w:".$weekDay." ";
+      $weekDay = date('w', strtotime($new_day));
+      $day_print = date("d", strtotime($new_day));
+      $day_name = date('D', strtotime($new_day));
+     
+      if($weekDay == 5 || $weekDay == 6)
+      {
+        echo '<th style="background-color:#ff0000">'. $day_print . '</th>';
+      }
+      else{
+        echo '<th style="background-color:#4CAF50">'. $day_print . '</th>';
+      }
+      $start_day = strtotime("1 day", strtotime($new_day));
+      $new_day = date("Y-m-d", $start_day);
     }
     ?>
     <th style="background-color: #a1716a"> Total Present</th>
   </tr>
   </thead>
   <?php
-    $sql_1 = "SELECT distinct employee_id FROM attendances";  
+    $sql_1 = "SELECT distinct employee_id FROM attendances ORDER BY employee_id DESC";  
     $result_1 = mysqli_query($conn,$sql_1);
     if(mysqli_num_rows($result_1) > 0){
         while($row_1 = mysqli_fetch_array($result_1)){
@@ -88,31 +119,39 @@
                 $new_day = $day_in;
                 while($row_2 = mysqli_fetch_array($result_2)){
                     $data_day = $row_2['date'];
-                    if($data_day < $day_in){
-                        continue; 
-                    }
-                    $counter = 0;
-                    while($counter == 0){
-                        if($data_day == $new_day){
-                          echo '<td> &#10004;&#65039; </td>';
-                          //echo '<td>' . $row_2['date'] . '</td>';
-                          //echo "<td><img src= URL::asset('/image/greenTick.png')></td>";
-                          $start_day = strtotime("1 day", strtotime($new_day));
-                          $new_day = date("Y-m-d", $start_day);
-                          $counter = 1;
-                          $total_present++;
-                        }
-                        else {
+                    if($data_day >= $day_in && $data_day <= $day_out){
+                      $counter = 0; //check for a present date untill found
+                      while($counter == 0){
+                          if($data_day == $new_day){
+                            $weekDay = date('w', strtotime($new_day));
+                            echo '<td> &#10004;&#65039; </td>';
                             $start_day = strtotime("1 day", strtotime($new_day));
                             $new_day = date("Y-m-d", $start_day);
-                            echo '<td> &#10060 </td>';
-                        }
+                            $counter = 1;
+                            $total_present++;
+                          }
+                          else {
+                              $start_day = strtotime("1 day", strtotime($new_day));
+                              $new_day = date("Y-m-d", $start_day);
+                              echo '<td> &#10060 </td>';
+                          }
+                      }
                     }
                 }
-                while ($new_day <= $day_out){
+                // If data is not found or for showing future days 
+                if($today < $day_out){
+                  while ($new_day <= $day_out ){
                     $start_day = strtotime("1 day", strtotime($new_day));
                     $new_day = date("Y-m-d", $start_day);
                     echo '<td> &#x2013 </td>';
+                  }
+                }
+                else{
+                  while ($new_day <= $day_out ){
+                    $start_day = strtotime("1 day", strtotime($new_day));
+                    $new_day = date("Y-m-d", $start_day);
+                    echo '<td> &#10060 </td>';
+                  }
                 }
                 //count present days
                 echo '<td>'. $total_present . '</td>';
