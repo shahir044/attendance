@@ -4,7 +4,7 @@
 
     <div class="content">
 
-        <h1>Month: {{ $date }}</h1>
+        <h1>Month: {{ $date  }}</h1>
         {{-- <h1>TEST: {{$reqDate}}</h1> --}}
         {{-- <>TEST: {{$reqDate}}</> --}}
 

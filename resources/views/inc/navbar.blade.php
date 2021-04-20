@@ -106,6 +106,7 @@
 
                         <li class="navbar-brand active">
                             @if (Auth::guard('web')->user())
+                            
                             <form action="{{route('logout')}}" method="post">
                                 @csrf
                                 <button class="btn btn-outline-dark" type="submit"> Logout</button>
