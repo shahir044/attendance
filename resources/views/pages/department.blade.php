@@ -3,7 +3,7 @@
 @section('context')  
 {{-- <a href="javascript:window.history.back();"  class="btn btn-primary" style="margin: 10px"> Go Back</a> --}}
     <div class="content">
-        <h1>Date: {{$date}}</h1>
+        <h1>Date: {{\Carbon\Carbon::parse($date)->format('d-M-Y')}}</h1>
         <h1>{{$total[0]->building_name}}: {{$total[0]->Total}}</h1>
     </div>
     <table class="table table-striped table-hover customTable">

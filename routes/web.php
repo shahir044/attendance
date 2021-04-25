@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\fileUploadController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,13 +15,19 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/password', function(){
+    return Hash::make("eioptgjeopjgoper");
+});
+Auth::routes();
 
-Route::get('/',function() {
-    return view('pages.file_upload');
+Route::group(['middleware' => 'auth:web'], function () {
+
+
+Route::get('/file','FileUploadController@uploadFile');
+Route::post('/file','FileUploadController@fileUploaded')->name('file.Uploaded');
+
 });
 
-Route::get('/file','fileController@uploadFile');
-Route::post('/file','fileController@fileUploaded')->name('file.Uploaded');
 Route::get('/attendance/{id}/{date}', 'fileController@show');
 Route::get('/attendance/{id}/{d_id}/{date}', 'fileController@showDepartmentDetails');
 Route::get('/search', 'fileController@search');
@@ -29,14 +37,14 @@ Route::get('/sumtwo', 'fileController@sumTwo');
 Route::get('/attendance', 'fileController@attendance');
 
 Route::get('/test','fileController@test');
-Auth::routes();
 
+/* Route::get('/','FileUploadController@uploadFile'); */
 
 
 
 Route::get('/month', 'fileController@month');
 
-Route::get('/home', function(){
+Route::get('/', function(){
     return view('pages.home');
 });
 
@@ -48,5 +56,9 @@ Route::get('/individual','fileController@individual');
 
 
 
+
+
+
+Auth::routes();
 
 

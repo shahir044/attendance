@@ -8,19 +8,22 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'BG Attendance') }}</title>
+    <title>{{ config('app.name', 'BGAttendance') }}</title>
 
     <!-- favicon for website -->
   <!--   <link rel="icon" type="image/png" href="{{ asset('images/favicon_img.png') }}"> -->
-    <!-- Scripts -->
+    
+  <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
+
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
     <style>
     
         .first_col {
@@ -53,8 +56,6 @@
 
 <body class="custom_body">
     <div id="app">
-        
-         
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm"
             style="background: linear-gradient(45deg, #47cf73, #e42c64);">
             <div class="first_col"><a href="#"><img src="{{ asset('images/Biman_Logo_English.png') }}" class="img-fluid" alt="logo"></a></div> 
@@ -92,18 +93,29 @@
                     <ul class="navbar-nav ml-auto">
                         <li class="navbar-brand active">
                             <a style="color: aliceblue" class="nav-link" href="/attendance">Home<span class="sr-only">(current)</span></a>
-                          </li>
-                          <li class="navbar-brand active">
-                              <a style="color: aliceblue" class="nav-link" href="{{ url('/month')}}">Monthly Record<span class="sr-only">(current)</span></a>
-                          </li>
-                          <li class="navbar-brand active">
-                              <a style="color: aliceblue" class="nav-link" href="{{ url('/sumtwo')}}">Summary<span class="sr-only">(current)</span></a>
-                          </li>
-                          <li class="navbar-brand active">
-                              <a style="color: aliceblue" class="nav-link" href="{{ url('/search')}}">Search<span class="sr-only">(current)</span></a>
-                          </li>
+                        </li>
+                        <li class="navbar-brand active">
+                            <a style="color: aliceblue" class="nav-link" href="{{ url('/month')}}">Monthly Record<span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="navbar-brand active">
+                            <a style="color: aliceblue" class="nav-link" href="{{ url('/sumtwo')}}">Summary<span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="navbar-brand active">
+                            <a style="color: aliceblue" class="nav-link" href="{{ url('/search')}}">Search<span class="sr-only">(current)</span></a>
+                        </li>
+
+                        <li class="navbar-brand active">
+                            @if (Auth::guard('web')->user())
+                            
+                            <form action="{{route('logout')}}" method="post">
+                                @csrf
+                                <button class="btn btn-outline-dark" type="submit"> Logout</button>
+                            </form>
+                                
+                            @endif
+                        </li>
                         
-{{--                         <!-- Authentication Links -->
+                        {{--  <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
                                 <a style="color: aliceblue" class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -115,7 +127,7 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                <a style="color: aliceblue" id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
@@ -133,14 +145,16 @@
 
                                 </div>
                             </li>
-                        @endguest --}}
+                        @endguest  --}}
+
+                        
                     </ul>
                 </div>
             </div>
         </nav>
 
         @yield('content')
-
+    
     </div>
 </body>
 

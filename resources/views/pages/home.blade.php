@@ -29,17 +29,17 @@
         <ul class="social">
             <li><a href="https://www.facebook.com/bimanbalaka/"><img src="https://i.ibb.co/x7P24fL/facebook.png"></a>
             </li>
-            <li><a href="https://www.facebook.com/bimanbalaka/"><img src="https://i.ibb.co/Wnxq2Nq/twitter.png"></a>
+           {{--  <li><a href="https://www.facebook.com/bimanbalaka/"><img src="https://i.ibb.co/Wnxq2Nq/twitter.png"></a>
             </li>
             <li><a href="https://www.facebook.com/bimanbalaka/"><img src="https://i.ibb.co/ySwtH4B/instagram.png"></a>
-            </li>
+            </li> --}}
         </ul>
     </section>
     <div class="menu">
         <ul>
             <li><a href="http://attendance.localhost/attendance">Home</a></li>
-            <li><a href="http://attendance.localhost/login">Sign In</a></li>
-            <li><a href="http://attendance.localhost/register">Register</a></li>
+{{--             <li><a href="http://attendance.localhost/login">Sign In</a></li>
+            <li><a href="http://attendance.localhost/register">Register</a></li> --}}
             <li><a href="https://www.biman-airlines.com/">Website</a></li>
             <li><a href="http://attendance.localhost/about">About</a></li>
         </ul>

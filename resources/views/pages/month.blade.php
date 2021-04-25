@@ -4,7 +4,7 @@
     $host = "localhost";
     $username = "root";
     $password = "";
-    $database = "attendence";
+    $database = "attendance";
 
     $conn = mysqli_connect($host, $username, $password, $database);
 ?>
@@ -83,20 +83,20 @@ echo '<h2>Monthly Attendance List: '. $monthName . '/' . $year . '</h2>';
     <!-- <th>Name</th>
     <th>Designation</th>
     <th>Department</th> -->
-    <th>ID</th>
+    <th style="background-color: #a1716a">ID</th>
     <?php
     $new_day = $day_in;
     while($new_day <= $day_out){
       $weekDay = date('w', strtotime($new_day));
       $day_print = date("d", strtotime($new_day));
       $day_name = date('D', strtotime($new_day));
-     
+      
       if($weekDay == 5 || $weekDay == 6)
       {
-        echo '<th style="background-color:#ff0000">'. $day_print . '</th>';
+        echo '<th style="background-color:#ED1C24">'. $day_print .'<br>'. $day_name . '</th>';
       }
       else{
-        echo '<th style="background-color:#4CAF50">'. $day_print . '</th>';
+        echo '<th style="background-color:#00803E">'. $day_print .'<br>'. $day_name . '</th>';
       }
       $start_day = strtotime("1 day", strtotime($new_day));
       $new_day = date("Y-m-d", $start_day);

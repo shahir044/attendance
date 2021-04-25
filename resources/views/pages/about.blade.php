@@ -8,9 +8,6 @@
     
     <title>Document</title>
 
-    
-
-
 <body class="page-top">
     <header class="header">
         <a class="logo" href="/attendance" >About</a>
@@ -47,7 +44,7 @@
                     </h2>
 
                     <p class="animate__animated animate__fadeInDown">
-                        <a href="/home"  class="link link-theme link-arrow" title="Let’s Build Something Great">LET’S
+                        <a href="/"  class="link link-theme link-arrow" title="Let’s Build Something Great">LET’S
                             BUILD SOMETHING GREAT</a>
                     </p>
 
@@ -134,7 +131,6 @@
                 1000
             );
         });
-    
     </script>
 
 </body>

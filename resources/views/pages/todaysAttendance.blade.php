@@ -4,7 +4,7 @@
 
     <div class="content">
         
-        <h1>Date: {{$date}}</h1>
+        <h1>Date: {{\Carbon\Carbon::parse($date)->format('d-M-Y')}}</h1>
         {{-- <h1>TEST: {{$reqDate}}</h1> --}}
         <h3>Total Present: {{$total[0]->Total}}</h3>
         <form  method="get" class="form-inline my-2 my-lg-0">
