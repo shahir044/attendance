@@ -60,7 +60,7 @@ class fileController extends Controller
             //return $buildings;
 
         //return $datas;
-        $date=date('m-Y', strtotime($year_month));
+        $date=date('M-Y', strtotime($year_month));
         return view('pages.sum2', compact('datas', 'totalDate', 'buildings','date'));
     }
 
