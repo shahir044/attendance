@@ -9,63 +9,19 @@ use Illuminate\Support\Facades\DB;
 
 use App\Attendance;
 use App\Department;
+use App\Employee;
 use Carbon\Carbon;
 use Cron\MonthField;
 
 class fileController extends Controller
 {
-    
 
-    public function summary()
-    {
-        $datas = DB::table('attendances')
-            ->select('date', 'buildings.building_name', DB::raw('count(*) as Total'))
-            ->join('buildings', 'buildings.building_id', '=', 'attendances.building_id')
-            /* ->where('buildings.building_name','=','Balaka') */
-            ->groupBy('building_name', 'date')->get();
-        //return $datas;
-        return view('pages.summary', compact('datas'));
-    }
 
-    public function sumTwo(Request $request)
-    {
-
-        $year_month = $request->get('selectedMonth');
-        $year = Carbon::parse($year_month)->year;
-        $month =Carbon::parse($year_month)->month;
-
-        $datas = DB::table('attendances')
-            ->select('date', 'buildings.building_name', DB::raw('count(*) as Total'), DB::raw('DAY(date) as dayDB'),DB::raw('DAYNAME(date) as dayName'))
-            ->join('buildings', 'attendances.building_id', '=', 'buildings.building_id')
-            /* ->where('buildings.building_name','=','Balaka') */
-            ->whereMonth('date', '=', $month)
-            ->groupBy('date','attendances.building_id','building_name')
-            ->orderBy('date')
-            ->get();
-        //return $datas;
-
-        $totalDate = DB::table('attendances')
-            ->select('date')
-            ->distinct('date')
-            ->get();
-
-        $buildings = DB::table('attendances')
-            ->select('building_name')
-            ->join('buildings', 'attendances.building_id', '=', 'buildings.building_id')
-            ->groupBy('buildings.building_id','building_name',DB::raw( 'MONTH(date)' ))
-            ->orderBy('buildings.building_id')
-            ->distinct('building_name')
-            ->get();
-        
-            //return $buildings;
-
-        //return $datas;
-        $date=date('M-Y', strtotime($year_month));
-        return view('pages.sum2', compact('datas', 'totalDate', 'buildings','date'));
-    }
 
     public function show($id, $date)
     {
+        $employee = Employee::where('comcardid','000052044');
+        dd($employee);
         //$date = Carbon::now()->format('Y-m-d');
         $data = DB::table('attendances')
             ->select('attendances.shop_id', 'employees.department', 'attendances.building_id', DB::raw('count(*) as Total'))
@@ -87,8 +43,16 @@ class fileController extends Controller
             ->groupBy('building_name')
             ->get();
         //return $total;
+       
+
+        $total_manpower = DB::table('employees')
+                        ->select('department',DB::raw('count(*) as Total'))
+                        ->groupBy('department')
+                        ->get();
+        //return $total_manpower;
+        
         /* $date=date('d-m-Y', strtotime($date)); */
-        return view('pages.department', compact('data', 'total', 'date'));
+        return view('pages.department', compact('data', 'total', 'date','total_manpower'));
     }
 
     public function showDepartmentDetails($id, $d_id, $selectedDate)
@@ -115,8 +79,26 @@ class fileController extends Controller
                 ->where('attendances.building_id', '=', $id))
             ->get();
         //return $absent;
-        $date=date('d-m-Y', strtotime($date));
-        return view('pages.employee', compact('data', 'id', 'date', 'absent'));
+
+        $data_department = DB::table('attendances')
+            ->select('attendances.shop_id', 'employees.department', 'attendances.building_id', DB::raw('count(*) as Total'))
+            ->join('employees', 'attendances.employee_id', '=', 'employees.employee_id')
+            ->where('date', '=', $date)
+            ->where('attendances.building_id', '=', $id)
+            ->where('employees.shop_id', '=', $d_id)
+            ->groupBy('attendances.building_id', 'attendances.shop_id', 'department')
+            ->orderBy('Total', 'DESC')
+            ->get();
+        //return $data_department;   
+
+        $total_manpower = DB::table('employees')
+        ->select('department',DB::raw('count(*) as Total'))
+        ->where('shop_id', '=', $d_id)
+        ->groupBy('department')
+        ->get();
+        //return $total_manpower;
+        $date = date('d-m-Y', strtotime($date));
+        return view('pages.employee', compact('data', 'id', 'date', 'absent','data_department','total_manpower'));
     }
 
 
@@ -147,25 +129,39 @@ class fileController extends Controller
 
         /* if ($datas->isEmpty()) { */
         $absent = DB::table('employees')
-            ->select('employee_id', 'name', 'designation', 'department')
+            ->select('employees.employee_id', 'employees.name', 'employees.designation', 'employees.department')
             ->whereNotIn(
-                'employees.employee_id',
-                DB::table('attendances')
+                'employees.employee_id',DB::table('attendances')
                     ->select('attendances.employee_id')
+                    ->where('date', '=', $date)
             )
-            ->where('name', 'like', '%' . $search . '%')
             /* ->orWhere('designation', 'like', '%'.$search.'%') */
             /* ->orderBy('attendances.employee_id','DESC') */
             /* ->orderBy('employees.employee_id', 'DESC')
             ->distinct() */
             ->get();
         /* }  */
-        $date=date('d-m-Y', strtotime($date));
+        $date = date('d-m-Y', strtotime($date));
         return view('pages.search', compact('datas', 'absent', 'date'));
     }
 
     public function attendance(Request $request)
     {
+        
+        $store = DB::connection('oracle');
+        /* 
+        $employee = DB::table('ATT_IN.tbl_raw_data')
+                    //->select('compcardid')
+                    ->where('PUNCHDATE','=','2021-01-17 00:00:00')
+                    //->where('compcardid','=','000052044')
+                    //->where('loc_id','=','214')
+                    ->orderByDesc('compcardid')
+                    ->take(10)
+                    ->get();
+        //$employee = DB::raw('select *from ATT_IN.tbl_raw_data where compcardid='000052046';')
+        
+        //dd($employee);
+        */
         $reqDate = $request->get('selectedDate');
         if (is_null($reqDate)) {
             $date = Carbon::now()->format('Y-m-d');
@@ -193,6 +189,62 @@ class fileController extends Controller
         /* $date=date('d-m-Y', strtotime($date)); */
         return view('pages.todaysAttendance', compact('data', 'total', 'date'));
     }
+
+    public function summary()
+    {
+        $datas = DB::table('attendances')
+            ->select('date', 'buildings.building_name', DB::raw('count(*) as Total'))
+            ->join('buildings', 'buildings.building_id', '=', 'attendances.building_id')
+            /* ->where('buildings.building_name','=','Balaka') */
+            ->groupBy('building_name', 'date')->get();
+        //return $datas;
+        return view('pages.summary', compact('datas'));
+    }
+
+    public function sumTwo(Request $request)
+    {
+
+        $year_month = $request->get('selectedMonth');
+
+        $year = Carbon::parse($year_month)->year;
+        $month = Carbon::parse($year_month)->month;
+
+
+        $datas = DB::table('attendances')
+            ->select('date', 'buildings.building_name', DB::raw('count(*) as Total'), DB::raw('DAY(date) as dayDB'), DB::raw('DAYNAME(date) as dayName'))
+            ->join('buildings', 'attendances.building_id', '=', 'buildings.building_id')
+            /* ->where('buildings.building_name','=','Balaka') */
+            ->whereMonth('date', '=', $month)
+            ->groupBy('date', 'attendances.building_id', 'building_name')
+            ->orderBy('date')
+            ->get();
+        //return $datas;
+
+        $totalDate = DB::table('attendances')
+            ->select('date')
+            ->distinct('date')
+            ->get();
+
+        $buildings = DB::table('attendances')
+            ->select('building_name')
+            ->join('buildings', 'attendances.building_id', '=', 'buildings.building_id')
+            ->groupBy('buildings.building_id', 'building_name', DB::raw('MONTH(date)'))
+            ->orderBy('buildings.building_id')
+            ->distinct('building_name')
+            ->get();
+
+        //return $buildings;
+
+        //return $datas;
+        $date = date('M-Y', strtotime($year_month));
+        //return $date;
+        if ($date == "Jan-1970") {
+            $date = Carbon::now()->format('M-Y');
+        }
+
+        return view('pages.sum2', compact('datas', 'totalDate', 'buildings', 'date'));
+    }
+
 
 
     public function test()

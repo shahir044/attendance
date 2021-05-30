@@ -139,7 +139,7 @@ class FileUploadController extends Controller
             ->where('date','=',$curr_date)
             ->get();
 */
-        return redirect('/')->with('success', "File Uploaded successfully");
+        return redirect('/attendance')->with('success', "File Uploaded successfully");
     }
     /**
      * Display a listing of the resource.

@@ -40,12 +40,11 @@
                     </h1>
 
                     <h2 class="animate__animated animate__fadeInDown">
-                        Daily presence counter in all buildings of Biman.
+                        Daily presence counter of all the buildings of Biman.
                     </h2>
 
                     <p class="animate__animated animate__fadeInDown">
-                        <a href="/"  class="link link-theme link-arrow" title="Let’s Build Something Great">LET’S
-                            BUILD SOMETHING GREAT</a>
+                        <a href="/"  class="link link-theme link-arrow" title="Let’s Build Something Great"></a>
                     </p>
 
                 </article>
@@ -62,25 +61,21 @@
                     </h2>
 
                     <ul class="menu">
-                        <li class="animate__animated animate__fadeInDown"><a  class="link link-theme link-arrow">Concise Objective</a></li>
-                        <li class="animate__animated animate__fadeInDown"><a  class="link link-theme link-arrow">Within Two points</a></li>
-                        <li class="animate__animated animate__fadeInDown"><a  class="link link-theme link-arrow"></a></li>
-                        <li class="animate__animated animate__fadeInDown"><a  class="link link-theme link-arrow"></a></li>
+                        <li class="animate__animated animate__fadeInDown"><a  class="link link-theme link-arrow">To keep track of employees daily presence of this organization</a></li>
                     </ul>
 
                 </article>
 
-                <article class="container" id="two">
-                    <h2>
-                        Use Case
-                    </h2>
 
-                </article>
 
                 <article class="container" id="three">
                     <h2>
                         Future Plan
                     </h2>
+
+                    <ul class="menu">
+
+                    </ul>
 
                 </article>
 

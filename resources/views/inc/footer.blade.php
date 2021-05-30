@@ -17,8 +17,12 @@
                     <p><i class="icon_heart"></i><a href="https://www.biman-airlines.com/"><b>www.biman-airlines.com</b></a></p>
                 </div>
             </div>
+            
+            <div >
+                <a href="#"><img src="{{ asset('images/biman.png') }}" class="img-fluid" alt="logo"></a>
+            </div> 
+    
         </div>
-        <div ><a href="#"><img src="{{ asset('images/biman.png') }}" class="img-fluid" alt="logo"></a></div> 
     </div>
 </footer> --}}
 

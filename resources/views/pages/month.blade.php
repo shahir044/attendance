@@ -25,29 +25,6 @@
 </style>
 
 <div class="content" style="width: 100%">
-<div >
-<?php
-if(isset($_GET['month']) && isset($_GET['year'])){
-  $month = $_GET['month'];
-  $monthName = date('F', mktime(0, 0, 0, $month, 10));
-  $year = $_GET['year'];
-  
-  $day_in = $year.'-'.$month.'-01';
-  $day_out = date ("Y-m-t",strtotime($day_in));
-  $today = date('Y-m-d'); 
-}
-else{
-  $month = date('m');
-  $monthName = date('F', mktime(0, 0, 0, $month, 10)); 
-  $year = date('Y');
-
-  $today = date('Y-m-d');    //today;
-  $day_in = date('Y-m-01');   //first date of current month
-  $day_out = date("Y-m-t", strtotime($today));    //last date of current month
-}
-echo '<h2>Monthly Attendance List: '. $monthName . '/' . $year . '</h2>';
-?>
-</div>
 
 <div>
 <form>
@@ -72,9 +49,38 @@ echo '<h2>Monthly Attendance List: '. $monthName . '/' . $year . '</h2>';
 </form>
 </div>
 
+
+
 <div>
 <input type="text" id="searchInput" onkeyup="searchByID()" placeholder="Search Employee ID..." title="Type Employee ID">
 </div>
+
+<div >
+<?php
+if(isset($_GET['month']) && isset($_GET['year'])){
+  $month = $_GET['month'];
+  $monthName = date('F', mktime(0, 0, 0, $month, 10));
+  $year = $_GET['year'];
+  
+  $day_in = $year.'-'.$month.'-01';
+  $day_out = date ("Y-m-t",strtotime($day_in));
+  $today = date('Y-m-d'); 
+}
+else{
+  $month = date('m');
+  $monthName = date('F', mktime(0, 0, 0, $month, 10)); 
+  $year = date('Y');
+
+  $today = date('Y-m-d');    //today;
+  $day_in = date('Y-m-01');   //first date of current month
+  $day_out = date("Y-m-t", strtotime($today));    //last date of current month
+}
+echo '<h2>Monthly Attendance List: '. $monthName . '/' . $year . '</h2>';
+?>
+</div>
+
+
+
 </div>
 <div style="overflow: auto; height: 500px; width: 100%;" >
 <table class="table table-striped table-hover customTable" id="monthlyAttendanceTable" >
