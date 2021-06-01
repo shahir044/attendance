@@ -63,7 +63,7 @@
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->designation }}</td>
                     <td>{{ $item->employee_id }}</td>
-                    <td style="background-color:#c54c67">Unavailable from 06:30 am to 10:00 am</td>
+                    <td style="background-color:#c54c67">Unavailable from 06:30 am to 10:30 am</td>
                 </tr>
             @endforeach
         </tbody>

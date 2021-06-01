@@ -12,6 +12,7 @@ use App\Department;
 use App\Employee;
 use Carbon\Carbon;
 use Cron\MonthField;
+use PHPUnit\Util\Json;
 
 class fileController extends Controller
 {
@@ -20,8 +21,8 @@ class fileController extends Controller
 
     public function show($id, $date)
     {
-        $employee = Employee::where('comcardid','000052044');
-        dd($employee);
+        //$employee = Employee::where('comcardid','000052044');
+        //dd($employee);
         //$date = Carbon::now()->format('Y-m-d');
         $data = DB::table('attendances')
             ->select('attendances.shop_id', 'employees.department', 'attendances.building_id', DB::raw('count(*) as Total'))
@@ -43,16 +44,16 @@ class fileController extends Controller
             ->groupBy('building_name')
             ->get();
         //return $total;
-       
+
 
         $total_manpower = DB::table('employees')
-                        ->select('department',DB::raw('count(*) as Total'))
-                        ->groupBy('department')
-                        ->get();
+            ->select('department', DB::raw('count(*) as Total'))
+            ->groupBy('department')
+            ->get();
         //return $total_manpower;
-        
+
         /* $date=date('d-m-Y', strtotime($date)); */
-        return view('pages.department', compact('data', 'total', 'date','total_manpower'));
+        return view('pages.department', compact('data', 'total', 'date', 'total_manpower'));
     }
 
     public function showDepartmentDetails($id, $d_id, $selectedDate)
@@ -92,13 +93,13 @@ class fileController extends Controller
         //return $data_department;   
 
         $total_manpower = DB::table('employees')
-        ->select('department',DB::raw('count(*) as Total'))
-        ->where('shop_id', '=', $d_id)
-        ->groupBy('department')
-        ->get();
+            ->select('department', DB::raw('count(*) as Total'))
+            ->where('shop_id', '=', $d_id)
+            ->groupBy('department')
+            ->get();
         //return $total_manpower;
         $date = date('d-m-Y', strtotime($date));
-        return view('pages.employee', compact('data', 'id', 'date', 'absent','data_department','total_manpower'));
+        return view('pages.employee', compact('data', 'id', 'date', 'absent', 'data_department', 'total_manpower'));
     }
 
 
@@ -131,7 +132,8 @@ class fileController extends Controller
         $absent = DB::table('employees')
             ->select('employees.employee_id', 'employees.name', 'employees.designation', 'employees.department')
             ->whereNotIn(
-                'employees.employee_id',DB::table('attendances')
+                'employees.employee_id',
+                DB::table('attendances')
                     ->select('attendances.employee_id')
                     ->where('date', '=', $date)
             )
@@ -147,8 +149,106 @@ class fileController extends Controller
 
     public function attendance(Request $request)
     {
-        
+        ini_set('max_execution_time', 1800); 
+
+        $reqDate = $request->get('selectedDate');
+        if (is_null($reqDate)) {
+            $reqDate = Carbon::now()->format('Y-m-d');
+        } else {
+            $reqDate = $reqDate;
+        }
+        date_default_timezone_set('Asia/Dhaka');
+        $mytime = date('H:i:s');
+
+
+        //return $mytime;
+        //return $reqDate;
+        //$data = Attendance::all();
+        //session(['search_criteria' => $request->input()]);
+
+
+        //$reqDate = request('selectedDate');
+
+        $data = DB::table('attendances')
+            ->select('date', 'buildings.building_id', 'buildings.building_name', DB::raw('count(*) as Total'))
+            ->join('buildings', 'buildings.building_id', '=', 'attendances.building_id')
+            ->where('date', '=', $reqDate)
+            ->groupBy('buildings.building_id', 'building_name', 'date')
+            ->orderBy('buildings.building_name', 'ASC')->get();
+
+
+        $total = DB::table('attendances')
+            ->select(DB::raw('count(*) as Total'))
+            ->where('date', '=', $reqDate)
+            ->get();
+
+        if (count($data) == 0 || (count($data) > 0 && ($mytime > '06:00:00' && $mytime < '12:00:00'))) {
+            //return $mytime;
         $store = DB::connection('oracle');
+        $data_array = $store->select("SELECT compcardid, min(to_char(punchtime,'HH24:MI:SS')) As punchtime, loc_id FROM ATT_IN.tbl_raw_data where to_char(punchdate,'YYYY-MM-DD') = '$reqDate' AND (to_char(punchtime,'HH24:MI:SS')) BETWEEN '06:30:00' AND '12:00:00' GROUP BY compcardid,loc_id");
+        //$data_array = $store->select("SELECT to_char(punchdate,'YYYY-MM-DD') As punchdate,compcardid, min(to_char(punchtime,'HH24:MI:SS')) As punchtime, loc_id FROM ATT_IN.tbl_raw_data where to_char(punchdate,'YYYY-MM-DD') BETWEEN '2021-02-01' AND '2021-02-28' AND (to_char(punchtime,'HH24:MI:SS')) BETWEEN '06:30:00' AND '10:30:00' GROUP BY punchdate,compcardid,loc_id ORDER BY punchdate");
+        //$var_res = response($data);
+
+
+        //$data = DB::table('attendances')->get();
+        //return $data;
+
+        //$rooms = json_decode($var_res,true);
+        //var_dump($rooms);
+        //$data = $store->select("SELECT * FROM ATT_IN.tbl_raw_data where to_char(punchdate,'DD-Mon-YY') = '30-May-21' ");
+
+        $uniqueValue = array();
+
+        for ($i = 0; $i < count($data_array); $i++) {
+            $punchdate = $reqDate;
+            //$punchdate = $data_array[$i]->punchdate;
+            $compcardid = $data_array[$i]->compcardid;
+            $punchtime = $data_array[$i]->punchtime;
+            $loc_id = $data_array[$i]->loc_id;
+
+
+            //return $punchtime;
+            $building_id = DB::table('machines')
+                ->where('machine_id', '=', $loc_id)
+                ->value('building_id');
+
+            $shop_id = DB::table('employees')
+                ->where('employee_id', '=', $compcardid)
+                ->value('shop_id');
+
+            //echo $punchdate." ".$compcardid." ".$punchtime." ".$loc_id." ".$building_id." ".$shop_id;
+            //echo "<br>";
+
+            $attendance = DB::table('attendances')->insertOrIgnore([
+                'date' => $punchdate,
+                'in_time' => $punchtime,
+                'employee_id' => $compcardid,
+                'building_id' => $building_id,
+                'shop_id' => $shop_id,
+                'machine_id' => $loc_id
+            ]);
+        }
+
+        $data = DB::table('attendances')
+            ->select('date', 'buildings.building_id', 'buildings.building_name', DB::raw('count(*) as Total'))
+            ->join('buildings', 'buildings.building_id', '=', 'attendances.building_id')
+            ->where('date', '=', $reqDate)
+            ->groupBy('buildings.building_id', 'building_name', 'date')
+            ->orderBy('buildings.building_name', 'ASC')->get();
+
+
+        $total = DB::table('attendances')
+            ->select(DB::raw('count(*) as Total'))
+            ->where('date', '=', $reqDate)
+            ->get();
+
+        $date = $reqDate;
+        return view('pages.todaysAttendance', compact('data', 'total', 'date'));
+        } else {
+            $date = $reqDate;
+            return view('pages.todaysAttendance', compact('data', 'total', 'date'));
+        }
+
         /* 
         $employee = DB::table('ATT_IN.tbl_raw_data')
                     //->select('compcardid')
@@ -162,32 +262,8 @@ class fileController extends Controller
         
         //dd($employee);
         */
-        $reqDate = $request->get('selectedDate');
-        if (is_null($reqDate)) {
-            $date = Carbon::now()->format('Y-m-d');
-        } else {
-            $date = $reqDate;
-        }
-        //$data = Attendance::all();
-        //session(['search_criteria' => $request->input()]);
 
-
-        //$reqDate = request('selectedDate');
-
-        $data = DB::table('attendances')
-            ->select('date', 'buildings.building_id', 'buildings.building_name', DB::raw('count(*) as Total'))
-            ->join('buildings', 'buildings.building_id', '=', 'attendances.building_id')
-            ->where('date', '=', $date)
-            ->groupBy('buildings.building_id', 'building_name', 'date')
-            ->orderBy('buildings.building_name', 'ASC')->get();
-
-
-        $total = DB::table('attendances')
-            ->select(DB::raw('count(*) as Total'))
-            ->where('date', '=', $date)
-            ->get();
         /* $date=date('d-m-Y', strtotime($date)); */
-        return view('pages.todaysAttendance', compact('data', 'total', 'date'));
     }
 
     public function summary()

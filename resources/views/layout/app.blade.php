@@ -15,16 +15,20 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}" >
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    
+    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
     <!-- Fonts -->
 
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    
     <style>
         .card-container {
             padding: 10px;
@@ -192,6 +196,7 @@
         });
 
     </script>
+  
 
     @include('inc.footer')
 

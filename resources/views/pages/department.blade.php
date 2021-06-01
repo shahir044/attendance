@@ -11,7 +11,7 @@
           <tr>
             <th scope="col">Department Name</th>
             <th scope="col">Total Present</th>
-            <th scope="col">Total Manpower</th>
+            
             
           </tr>
         </thead>
@@ -19,10 +19,10 @@
           @foreach ($data as $item)
           <tr>
             <td><a href="/attendance/{{$item->building_id}}/{{$item->shop_id}}/{{$date}}">{{$item->department}}</a></td>
-            <td>{{$item->Total}}</td>
+            
             @foreach ($total_manpower as $manpower)
               @if ($manpower->department == $item->department)
-              <td>{{$manpower->Total}}</td>
+              <td>{{$item->Total}} ({{$manpower->Total}})</td>
               @endif
             @endforeach    
           </tr>
